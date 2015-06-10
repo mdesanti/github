@@ -12,7 +12,7 @@
 
 (function() {
   'use strict';
-  
+
   // Initial Setup
   // -------------
 
@@ -24,11 +24,11 @@
       if (typeof btoa === 'undefined') {
         var btoa = require('btoa'); //jshint ignore:line
       }
-      
-  } else { 
-      _ = window._; 
+
+  } else {
+      _ = window._;
   }
-  
+
   //prefer native XMLHttpRequest always
   /* istanbul ignore if  */
   if (typeof window !== 'undefined' && typeof window.XMLHttpRequest !== 'undefined'){
@@ -195,6 +195,12 @@
         });
       };
 
+      this.orgIssues = function(orgname, cb) {
+        _requestAllPages('/orgs/' + orgname + '/issues?filer=all&page_num=1000&sort=updated&direction=desc', function(err, res) {
+          cb(err, res);
+        });
+      }
+
       // Follow user
       // -------
 
@@ -251,7 +257,7 @@
         if (branch === currentTree.branch && currentTree.sha) {
           return cb(null, currentTree.sha);
         }
-        
+
         that.getRef('heads/' + branch, function(err, sha) {
           currentTree.branch = branch;
           currentTree.sha = sha;
@@ -267,7 +273,7 @@
           if (err) {
             return cb(err);
           }
-          
+
           cb(null, res.object.sha);
         });
       };
@@ -316,7 +322,7 @@
           if (err) {
             return cb(err);
           }
-          
+
           cb(null, tags);
         });
       };
@@ -409,7 +415,7 @@
             "encoding": "utf-8"
           };
         } else {
-          	content = {
+            content = {
               "content": btoa(String.fromCharCode.apply(null, new Uint8Array(content))),
               "encoding": "base64"
             };
@@ -521,7 +527,6 @@
       // --------
 
       this.contents = function(ref, path, cb) {
-        path = encodeURI(path);
         _request("GET", repoPath + "/contents" + (path ? "/" + path : ""), { ref: ref }, cb);
       };
 
@@ -596,7 +601,7 @@
       // -------
 
       this.read = function(branch, path, cb) {
-        _request("GET", repoPath + "/contents/"+encodeURI(path), {ref: branch}, function(err, obj) {
+        _request("GET", repoPath + "/contents/"+path, {ref: branch}, function(err, obj) {
           if (err && err.error === 404) return cb("not found", null, null);
 
           if (err) return cb(err);
@@ -664,9 +669,9 @@
       // -------
 
       this.write = function(branch, path, content, message, cb) {
-        that.getSha(branch, encodeURI(path), function(err, sha) {
+        that.getSha(branch, path, function(err, sha) {
           if (err && err.error !== 404) return cb(err);
-          _request("PUT", repoPath + "/contents/" + encodeURI(path), {
+          _request("PUT", repoPath + "/contents/" + path, {
             message: message,
             content: btoa(content),
             branch: branch,
