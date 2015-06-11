@@ -351,7 +351,7 @@
       };
 
       this.getPullComments = function(pullNumber, cb) {
-        var path = repoPath + '/pulls/' + pullNumber + '/comments';
+        var path = repoPath + '/issues/' + pullNumber + '/comments';
         _requestAllPages(path, function(err, comments) { cb(comments) });
       }
 
