@@ -202,8 +202,11 @@
         });
       }
 
-      this.orgIssues = function(orgname, cb) {
-        _requestAllPages('/orgs/' + orgname + '/issues?filer=all&page_num=1000&sort=updated&direction=desc', function(err, res) {
+      this.orgIssues = function(orgname, filter, cb) {
+        if (!filter) {
+          filter = 'all'
+        }
+        _requestAllPages('/orgs/' + orgname + '/issues?filter=' + filter + '&state=open&sort=updated&direction=desc', function(err, res) {
           cb(err, res);
         });
       }
