@@ -195,13 +195,6 @@
         });
       };
 
-      this.issueComments = function(owner, repo, comments, cb) {
-        var url = '/repos/' + owner + '/' + repo + '/issues/' + number + '/comments';
-        _requestAllPages(url, function(err, res) {
-          cb(err, res);
-        });
-      }
-
       this.orgIssues = function(orgname, filter, cb) {
         if (!filter) {
           filter = 'all'
@@ -356,6 +349,11 @@
           cb(null, pull);
         });
       };
+
+      this.getPullComments = function(pullNumber, cb) {
+        var path = repoPath + '/pulls/' + pullNumber + '/comments';
+        _requestAllPages(path, function(err, comments) { cb(comments) });
+      }
 
       // Retrieve the changes made between base and head
       // -------
