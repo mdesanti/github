@@ -195,6 +195,13 @@
         });
       };
 
+      this.issueComments = function(owner, repo, comments, cb) {
+        var url = '/repos/' + owner + '/' + repo + '/issues/' + number + '/comments';
+        _requestAllPages(url, function(err, res) {
+          cb(err, res);
+        });
+      }
+
       this.orgIssues = function(orgname, cb) {
         _requestAllPages('/orgs/' + orgname + '/issues?filer=all&page_num=1000&sort=updated&direction=desc', function(err, res) {
           cb(err, res);
